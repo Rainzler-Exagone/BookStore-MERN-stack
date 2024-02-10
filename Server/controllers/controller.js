@@ -43,20 +43,20 @@ const deletBook = async (req, res) => {
 //creat Book
 const createBook = async (req, res) => {
     try {
-       if (
-        !req.body.title ||
-        !req.body.author ||
-        !req.body.price ||
-        !req.body.category
-       ) {
-        return res.status(500).send({message: "send all required fields"})
-       }
-       const newBook = {
-        title : req.body.title,
-        author : req.body.title,
-        price : req.body.price,
-        category : req.body.category
-       }
+        if (
+            !req.body.title ||
+            !req.body.author ||
+            !req.body.price ||
+            !req.body.category
+        ) {
+            return res.status(500).send({ message: "send all required fields" })
+        }
+        const newBook = {
+            title: req.body.title,
+            author: req.body.title,
+            price: req.body.price,
+            category: req.body.category
+        }
         const book = await Book.create(newBook);
         res.status(200).send(book)
     } catch (error) {
@@ -64,8 +64,33 @@ const createBook = async (req, res) => {
     }
 }
 
+const updateBook = async (req, res) => {
+    try {
+        if (
+            !req.body.title ||
+            !req.body.author ||
+            !req.body.price ||
+            !req.body.category
+            ) {
+               res.status(500).send({
+                message : "all fields are required"
+               }) 
+        }
+        const {id} = req.params;
+        const result = await Book.findByIdAndUpdate(id, req.body)
+
+        if (!result) {
+            res.status(404).send({message:"Book not found"})
+        }
+        res.status(200).send({message:"Book updated successfully"})
+    } catch (error) {
+        console.log(error.message);
+       res.status(500).send({message: error.message})
+    }
+}
 
 
-module.exports = { getAllBooks, getBook, deletBook, createBook }
+
+module.exports = { getAllBooks, getBook, deletBook, createBook , updateBook}
 
 

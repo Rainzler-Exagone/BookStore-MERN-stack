@@ -5,7 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const nodemon = require("nodemon");
 const BookRoute = require("./Routes/BookRoute");
-const { getAllBooks, deletBook, createBook} = require("./controllers/controller");
+const { getAllBooks, deletBook, createBook, updateBook} = require("./controllers/controller");
 const {getBook} = require("./controllers/controller");
 const MongoClient = require("mongodb").MongoClient;
 
@@ -41,3 +41,5 @@ app.use("/Book/:id", getBook);
 app.use("/Delete/:id",deletBook);
 
 app.use("/saveBook",createBook);
+
+app.use("/updateBook/:id",updateBook);
