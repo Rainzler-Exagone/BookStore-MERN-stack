@@ -2,18 +2,19 @@
 const Book = require('../models/bookModel');
 const express = require('express');
 
+//get all the books
 const getAllBooks = async (req, res) => {
     try {
         const books = await Book.find({});
-        res.status(200).json({data: books});
+        res.status(200).json({ data: books });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "something went wrong" });
     }
 }
 
-
-const getBook= async (req, res) => {
+//get a book
+const getBook = async (req, res) => {
     try {
         const { id } = req.params;
         const book = await Book.findById(id);
@@ -23,29 +24,48 @@ const getBook= async (req, res) => {
     }
 }
 
-// const getBook = async (req, res) => {
+//delet book
+const deletBook = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const book = await Book.findByIdAndDelete(id);
+        if (!book) {
+            res.status(404).json({ message: "book not found" });
+        }
+        else {
+            res.status(200).json({ message: "book deleted successfully" });
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
 
-//     try {
-//         if (
-//             !req.body.title ||
-//             !req.body.author ||
-//             !req.body.descripiton ||
-//             !req.body.price ||
-//             !req.body.category
-//         ) {
-//             return response.send(400).json({ message: "all the fields are required" });
-//         }
-//         const newBook = {
-//             title: req.body.Book,
-//             author: req.body.author,
-//             descripiton: req.body.descripiton,
-//             price: req.body.price,
-//             category: req.body.category
-//         }
-//         const book = new create(newBook)
-//     } catch (error) {
-//         res.status(400).json({ message: error.message })
-//     }
-// }
+//creat Book
+const createBook = async (req, res) => {
+    try {
+       if (
+        !req.body.title ||
+        !req.body.author ||
+        !req.body.price ||
+        !req.body.category
+       ) {
+        return res.status(500).send({message: "send all required fields"})
+       }
+       const newBook = {
+        title : req.body.title,
+        author : req.body.title,
+        price : req.body.price,
+        category : req.body.category
+       }
+        const book = await Book.create(newBook);
+        res.status(200).send(book)
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
 
-module.exports = { getAllBooks, getBook }
+
+
+module.exports = { getAllBooks, getBook, deletBook, createBook }
+
+

@@ -5,16 +5,14 @@ const express = require("express");
 const cors = require("cors");
 const nodemon = require("nodemon");
 const BookRoute = require("./Routes/BookRoute");
-const { getAllBooks } = require("./controllers/controller");
+const { getAllBooks, deletBook, createBook} = require("./controllers/controller");
 const {getBook} = require("./controllers/controller");
 const MongoClient = require("mongodb").MongoClient;
 
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-// })
+
 mongoose.connect(process.env.mongodb)
     .then((res) => {
         console.log("connected");
@@ -30,13 +28,16 @@ app.listen(PORT,() => {
     })
 })
 
-
+//Middleware for handling CORS policy
 app.use(cors());
 
+//Prase data received through a JSON format
 app.use(express.json());
 
 app.use("/Books",getAllBooks);
 
 app.use("/Book/:id", getBook);
 
+app.use("/Delete/:id",deletBook);
 
+app.use("/saveBook",createBook);
